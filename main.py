@@ -8,9 +8,9 @@ from Google import Create_Service
 API_Name = 'sheets'
 API_VERSION = 'v4'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-TOKEN = 'OTM3NzgwMzg2NzA3MTY1MjU0.YfguCw.gJCO7zXKVAa870o42hLNkzt8KxU'
+TOKEN = #discord bot token 
 bot = commands.Bot(command_prefix='!')
-api_key = 'RGAPI-18f4d876-72bc-4c74-80a9-d50842c4b504'
+api_key = #riot API token
 watcher = LolWatcher(api_key)
 region = 'na1'
 s = HTMLSession()
