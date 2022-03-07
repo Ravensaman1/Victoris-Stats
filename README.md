@@ -10,3 +10,12 @@ The bot also does the same thing for team stats and keeps track of champion stat
   
 One of our current biggest issues with our API key is that I have to re-generate my API key every morning in order for this to work which can be quite a hassle especially if I am out of town or away froom my computer. One of the advantages that I would love to utilize is not having to regenerate my api key every morning as I know other people who have thier production keys.
 Another big issue currently is that we currently have to use third party websites in order to keep our tournaments running with tournament codes. After match-v4 was discontinued and it was moved onto match-v5 we lost custom game compatibility which meant we had to use tournament codes in order to collect any sort of stats from our games. 
+
+Down the line some things we would like to add is the opportunity to track Valorant stats as our Valorant leagues are growing quite quickly. Tournament code generation so that we can cut reliance on third party websites such as toornament and battlefy. And our production team has mentioned multiple times that they would be able to integrate a lot of useful features into their broadcast with a production key as well. 
+
+  
+You can find any info about us at the following links  
+Victoris Esports discord link : https://discord.gg/hjXKmjAJ
+Victoris Esports youtube channel : https://www.youtube.com/c/VictorisEsports
+Victoris Esports twitch channel : https://www.twitch.tv/victorisgg and https://www.twitch.tv/victorisgg2
+Victoris Esports twitter : https://twitter.com/VictorisGG
