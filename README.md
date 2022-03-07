@@ -15,7 +15,8 @@ Down the line some things we would like to add is the opportunity to track Valor
 
   
 You can find any info about us at the following links  
-Victoris Esports discord link : https://discord.gg/hjXKmjAJ
+Victoris Esports discord link : https://discord.gg/victoris
 Victoris Esports youtube channel : https://www.youtube.com/c/VictorisEsports
 Victoris Esports twitch channel : https://www.twitch.tv/victorisgg and https://www.twitch.tv/victorisgg2
 Victoris Esports twitter : https://twitter.com/VictorisGG
+Victoris Esports website : https://victoris.gg
