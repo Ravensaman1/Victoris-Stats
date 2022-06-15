@@ -4,88 +4,84 @@ from discord.ext import commands
 from riotwatcher import LolWatcher
 from requests_html import HTMLSession
 from Google import Create_Service
+import requests
 
 API_Name = 'sheets'
 API_VERSION = 'v4'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-TOKEN = #discord bot token 
+TOKEN = #discord-token
 bot = commands.Bot(command_prefix='!')
-api_key = #riot API token
+api_key = #api-key
 watcher = LolWatcher(api_key)
 region = 'na1'
 s = HTMLSession()
 
-@bot.command(name='log')
-async def log(ctx, *args):
-    if ctx.author == bot.user:
-        return
-    elif ctx.channel.name == 'ravenbot':
-        await ctx.send('What is the Summoner name you would like to log')
-
-
 @bot.command(name='account')
 async def opgg(ctx, *args):
-    wins = 0
-    losses = 0
-    rank = ''
-    tier = ''
-    summLevel = ''
-    soloQ = False
-    if ctx.author == bot.user:
-        return
-    elif ctx.channel.name == 'ravenbot':
-        Account = ''.join(args)
-        opggLink = f'https://na.op.gg/summoner/userName={Account}'
-        leagueOfGraphsLink = f'https://www.leagueofgraphs.com/summoner/na/{Account}'
-        uggLink = f'https://u.gg/lol/profile/na1/{Account}/overview'
+    try:
+        wins = 0
+        losses = 0
+        rank = ''
+        tier = ''
+        summLevel = ''
+        soloQ = False
+        if ctx.author == bot.user:
+            return
+        elif ctx.channel.name == 'ravenbot':
+            Account = ''.join(args)
+            opggLink = f'https://na.op.gg/summoner/userName={Account}'
+            leagueOfGraphsLink = f'https://www.leagueofgraphs.com/summoner/na/{Account}'
+            uggLink = f'https://u.gg/lol/profile/na1/{Account}/overview'
 
-        await ctx.send(opggLink)
-        await ctx.send(leagueOfGraphsLink)
-        await ctx.send(uggLink)
-        me = watcher.summoner.by_name(region, Account)
-        for i in me:
-            if i == 'id':
-                id = me[i]
-            if i == 'summonerLevel':
-                summLevel = me[i]
-        await ctx.send(Account + ' is level ' + str(summLevel))
-        if summLevel < 75:
-            await ctx.send('**DENIED** Player summoner level is lower than minimum (75)')
-        rankedStatsLst = watcher.league.by_summoner(region, id)
-        if len(rankedStatsLst) == 0:
-            await ctx.send("Player is unranked")
+            await ctx.send(opggLink)
+            await ctx.send(leagueOfGraphsLink)
+            await ctx.send(uggLink)
+            me = watcher.summoner.by_name(region, Account)
+            for i in me:
+                if i == 'id':
+                    id = me[i]
+                if i == 'summonerLevel':
+                    summLevel = me[i]
+            await ctx.send(Account + ' is level ' + str(summLevel))
+            if summLevel < 75:
+                await ctx.send('**DENIED** Player summoner level is lower than minimum 75')
+            rankedStatsLst = watcher.league.by_summoner(region, id)
+            if len(rankedStatsLst) == 0:
+                await ctx.send("Player is unranked")
+                return
+            else:
+                x = 0
+                y = len(rankedStatsLst)
+                while x != y:
+                    rankedStats = rankedStatsLst[x]
+                    for i in rankedStats:
+                        if rankedStats['queueType'] == 'RANKED_SOLO_5x5':
+                            soloQ = True
+                            tier = rankedStats['tier']
+                            rank = rankedStats['rank']
+                            wins = rankedStats['wins']
+                            losses = rankedStats['losses']
+                            x += 1
+                            break
+                        else:
+                            x += 1
+                            break
+            if soloQ:
+                gamesPlayed = wins + losses
+                winRate = wins / gamesPlayed * 100
+                await ctx.send(Account + ' has a rank of ' + tier + ' ' + rank + ' and has played ' + str(
+                    gamesPlayed) + ' games this season with a win rate of ' + str(round(winRate, 2)) + '%')
+                if gamesPlayed < 65:
+                    await ctx.send('**DENIED** Player has less than required games played (65)')
+                if winRate >= 58:
+                    await ctx.send('**ATTENTION** Player has above a 58% win rate, please investigate further')
+            else:
+                await ctx.send("Player is unranked")
             return
         else:
-            x = 0
-            y = len(rankedStatsLst)
-            while x != y:
-                rankedStats = rankedStatsLst[x]
-                for i in rankedStats:
-                    if rankedStats['queueType'] == 'RANKED_SOLO_5x5':
-                        soloQ = True
-                        tier = rankedStats['tier']
-                        rank = rankedStats['rank']
-                        wins = rankedStats['wins']
-                        losses = rankedStats['losses']
-                        x += 1
-                        break
-                    else:
-                        x += 1
-                        break
-        if soloQ:
-            gamesPlayed = wins + losses
-            winRate = wins / gamesPlayed * 100
-            await ctx.send(Account + ' has a rank of ' + tier + ' ' + rank + ' and has played ' + str(
-                gamesPlayed) + ' games this season with a win rate of ' + str(round(winRate, 2)) + '%')
-            if gamesPlayed < 50:
-                await ctx.send('**DENIED** Player has less than required games played (125)')
-            if winRate >= 58:
-                await ctx.send('**ATTENTION** Player has above a 58% win rate, please investigate further!')
-        else:
-            await ctx.send("Player is unranked")
-        return
-    else:
-        return
+            return
+    except:
+        await ctx.send("Summoner name is incorrect or doesn't exist")
 
 
 def player_stats(player, ID):
@@ -545,5 +541,6 @@ async def academy(ctx, *args):
         id = ''.join(args)
         service = Create_Service(CLIENT_SECRET_FILE, API_Name, API_VERSION, SCOPES)
         await stats(league, id, service)
+        
 
 bot.run(TOKEN)
